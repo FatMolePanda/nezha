@@ -65,6 +65,74 @@
       margin: 8px 0;
       font-size: 16px;
     }
+
+    /* Discord-style embed styles */
+    .discord-embed {
+      display: flex;
+      max-width: 600px;
+      background: #2f3136;
+      border-radius: 8px;
+      color: #dcddde;
+      font-family: monospace, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.6);
+      margin: 40px auto 20px auto;
+      overflow: hidden;
+      text-align: left;
+    }
+    .embed-sidebar {
+      width: 6px;
+      background-color: #7289da; /* Discord blurple */
+    }
+    .embed-main {
+      padding: 15px 20px;
+      flex-grow: 1;
+    }
+    .embed-title {
+      font-weight: 600;
+      font-size: 18px;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+    .embed-description {
+      font-size: 14px;
+      margin-bottom: 15px;
+      line-height: 1.4;
+    }
+    .embed-fields {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+    .embed-field {
+      flex: 1;
+      min-width: 120px;
+    }
+    .embed-field-name {
+      font-weight: 600;
+      font-size: 12px;
+      color: #b9bbbe;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+    }
+    .embed-field-value {
+      font-size: 14px;
+      color: #dcddde;
+      word-wrap: break-word;
+    }
+    .embed-footer {
+      font-size: 12px;
+      color: #72767d;
+      border-top: 1px solid #202225;
+      padding-top: 8px;
+    }
+    .embed-footer-link {
+      color: #7289da;
+      text-decoration: none;
+    }
+    .embed-footer-link:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
@@ -129,6 +197,32 @@
       <p>JelloReborn Folder - <a href="https://www.mediafire.com/folder/ep2jumz0a0j3l/JelloReborn" target="_blank">View</a></p>
     </div>
 
+  </div>
+
+  <!-- Discord-style embed added below -->
+  <div class="discord-embed">
+    <div class="embed-sidebar"></div>
+    <div class="embed-main">
+      <div class="embed-title">Example Embed Title</div>
+      <div class="embed-description">
+        This is a description of your embed. You can customize this text to display information just like Discord embeds.
+      </div>
+
+      <div class="embed-fields">
+        <div class="embed-field">
+          <div class="embed-field-name">Field 1</div>
+          <div class="embed-field-value">Value for field 1</div>
+        </div>
+        <div class="embed-field">
+          <div class="embed-field-name">Field 2</div>
+          <div class="embed-field-value">Value for field 2</div>
+        </div>
+      </div>
+
+      <div class="embed-footer">
+        Footer text • <a href="#" target="_blank" class="embed-footer-link">Footer Link</a>
+      </div>
+    </div>
   </div>
 
 </body>
