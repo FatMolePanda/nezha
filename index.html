@@ -78,6 +78,20 @@
     p {
       margin: 8px 0;
       font-size: 16px;
+      position: relative;
+      padding-right: 90px; /* space for right-aligned link */
+    }
+    p a {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgb(255, 0, 0);
+      text-decoration: none;
+    }
+    p a:hover {
+      color: lime;
+      text-decoration: underline;
     }
   </style>
 </head>
@@ -94,12 +108,11 @@
   <div class="container">
 
     <div class="column">
-      <h1>Clients I Use</h1>
+      <h1>Active Clients</h1>
       <p>Liquidbounce - <a href="https://liquidbounce.net/" target="_blank">Download</a></p>
       <p>Myau - <a href="https://myau.sell.app/" target="_blank">Download</a></p>
       <p>Platinum - <a href="https://discord.gg/YHH85FpeYj" target="_blank">Download</a></p>
       <p>Terminus - <a href="https://terminusclient.com/" target="_blank">Download</a></p>
-      <p>Tomato - <a href="https://github.com/SlickJava/tomato" target="_blank">Download</a></p>
       <p>Horion - <a href="https://horion.download/" target="_blank">Download</a></p>
       <p>Ambient - <a href="https://legitclient.com/" target="_blank">Download</a></p>
     </div>
@@ -111,14 +124,17 @@
       <p>ForkBounce - <a href="https://www.mediafire.com/folder/tcojjzivye5ua/Luvsy+Blatant" target="_blank">Download</a></p>
       <p>Nezha Archive - <a href="https://www.mediafire.com/folder/yhyoicwk93s2t/Nezha+Internal+Archive" target="_blank">Download</a></p>
       <p>WonderLand Archive - <a href="https://wonderland.codeberg.page/" target="_blank">Download</a></p>
-      <p>Smite Client (Bretixt Scam) - <a href="https://www.mediafire.com/file/cgkpm5ltuk4qy4v/smite-patched.jar/file" target="_blank">Download</a></p>
+      <p>Smite Client - <a href="https://www.mediafire.com/file/cgkpm5ltuk4qy4v/smite-patched.jar/file" target="_blank">Download</a></p>
       <p>TwoNick Cracks - <a href="https://github.com/TwoNick?tab=repositories" target="_blank">Download</a></p>
       <p>Violet Client - <a href="https://github.com/FatMolePanda/VioletClient" target="_blank">Download</a></p>
       <p>Diablo Client SRC - <a href="https://github.com/Reowya/diablo-x-src/releases/tag/src" target="_blank">Download</a></p>
       <p>Ripple Client - <a href="http://getripple.today/" target="_blank">Download</a></p>
       <p>Ripple Client Backup - <a href="https://www.mediafire.com/file/t7y9d1efv9c9hs5/hglpxa.7z/file" target="_blank">Download</a></p>
       <p>MCHCC - <a href="https://discord.gg/jvCZdaHr5B" target="_blank">Discord</a></p>
-      <p>MCC - <a href="https://discord.gg/X6RqPCzf5g" target="_blank">Discord</a> / <a href="https://www.kuyo.lol/mcc/" target="_blank">Website</a></p>
+      <p>Tomato - <a href="https://github.com/SlickJava/tomato" target="_blank">Download</a></p>
+      <!-- MCC links split into two paragraphs to prevent overlap -->
+      <p>MCC - <a href="https://discord.gg/X6RqPCzf5g" target="_blank">Discord</a></p>
+      <p>MCC - <a href="https://www.kuyo.lol/mcc/" target="_blank">Website</a></p>
     </div>
 
     <div class="column">
