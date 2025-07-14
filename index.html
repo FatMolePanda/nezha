@@ -1,197 +1,420 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Client Archive</title>
-  
-  <!-- Discord & Open Graph meta tags for rich embed -->
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="Nezha Anticheat" />
-  <meta property="og:description" content="Minecraft Hacked Clients and Legacy Client archive" />
+  <title>Client Archive - Nezha Anticheat</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta property="og:title" content="Nezha Anticheat - Client Archive" />
+  <meta property="og:description" content="Minecraft Hacked Clients and Legacy Client Archive." />
   <meta property="og:image" content="https://nezha.ac/images/embed.png" />
   <meta property="og:url" content="https://nezha.ac" />
-  
-  <!-- Twitter card (optional) -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Nezha Anticheat" />
-  <meta name="twitter:description" content="Minecraft Hacked Clients and Legacy Client archive" />
-  <meta name="twitter:image" content="https://nezha.ac/images/embed.png" />
-
   <style>
     body {
       background: url('images/nezha_bg.png') no-repeat center center fixed;
       background-size: cover;
       color: white;
       font-family: monospace;
-      text-align: center;
-      margin: 20px;
+      margin: 0;
+      height: 100vh;
+      overflow: hidden; /* prevent scrollbars when dragging */
+      position: relative;
     }
-    a {
-      color: rgb(255, 0, 0);
+    a.download-link {
+      display: inline-block;
+      color: white;
+      background: linear-gradient(135deg, #ff4500, #ff0000);
+      border: none;
+      border-radius: 6px;
+      padding: 4px 10px;
       text-decoration: none;
+      font-weight: bold;
+      text-align: center;
+      white-space: nowrap;
+      margin-left: auto; /* aligns to right inside flex */
     }
-    a:hover {
-      color: lime;
-      text-decoration: underline;
+    a.download-link:hover {
+      background: linear-gradient(135deg, #ff0000, #ff4500);
     }
     .site-title {
-      color: rgb(255, 81, 0);
-      font-family: monospace;
-      text-align: center;
+      color: rgb(255,81,0);
       font-size: 36px;
-      margin-top: 20px;
-      margin-bottom: 30px;
-    }
-    .container {
-      display: flex;
-      justify-content: center;
-      gap: 40px;
-      flex-wrap: wrap;
-      margin-top: 40px;
+      margin: 20px;
+      text-align: center;
     }
     .column {
       width: 380px;
-      text-align: left;
-      padding: 20px;
-      border: 2px solid rgb(255, 153, 0);
+      border: 2px solid rgb(255,81,0);
       border-radius: 12px;
-      box-shadow:
-        0 0 8px rgb(255, 136, 0),
-        0 0 15px rgb(255, 145, 0),
-        0 0 20px rgb(255, 0, 0);
-      background-color: rgba(0, 16, 16, 0.85);
-      transition: box-shadow 0.3s ease;
+      background: rgba(30,30,30,0.95);
+      position: absolute;
+      cursor: grab;
+      user-select: none;
       box-sizing: border-box;
     }
-    .column:hover {
-      box-shadow:
-        0 0 12px rgb(255, 0, 0),
-        0 0 25px rgb(255, 0, 0),
-        0 0 30px rgb(255, 0, 0);
-    }
-    h1 {
-      color: rgb(255, 145, 0);
-      font-size: 24px;
+    .column h1 {
+      margin: 0;
+      padding: 12px;
+      background: rgba(0,0,0,0.4);
+      color: rgb(255,145,0);
+      font-size: 22px;
       text-align: center;
-      margin-top: 0;
-      margin-bottom: 20px;
+      cursor: pointer;
+      user-select: none;
+      border-bottom: 2px solid rgb(255,81,0);
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
     }
-    p {
-      margin: 8px 0;
-      font-size: 16px;
-      position: relative;
-      padding-right: 90px; /* space for right-aligned link */
+    .content {
+      padding: 12px;
+      overflow-y: auto;
+      max-height: 500px;
+      transition: max-height 0.3s ease;
     }
-    p a {
-      position: absolute;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: rgb(255, 0, 0);
-      text-decoration: none;
+    .content.collapsed {
+      max-height: 0;
+      padding: 0;
+      overflow: hidden;
     }
-    p a:hover {
-      color: lime;
-      text-decoration: underline;
+    .client-box {
+      border: 2px solid rgb(255,81,0);
+      border-radius: 10px;
+      padding: 10px;
+      margin: 10px 0;
+      background: rgba(50,50,50,0.8);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .client-box span {
+      flex: 1;
+      padding-right: 10px;
+      word-break: break-word;
     }
     .bottom-link {
-      margin-top: 40px;
-      font-size: 18px;
+      position: fixed;
+      bottom: 10px;
+      width: 100%;
       text-align: center;
+      font-size: 18px;
+      z-index: 1200;
     }
-    .bottom-link a {
-      position: static;
-      color: rgb(255, 0, 0);
-      text-decoration: none;
+
+    /* Draggable image styles */
+    #movable-image {
+      position: absolute;
+      width: 450px;
+      height: auto;
+      cursor: grab;
+      user-select: none;
+      will-change: transform;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      -webkit-transform-style: preserve-3d;
+      z-index: 1000;
     }
-    .bottom-link a:hover {
-      color: lime;
-      text-decoration: underline;
+
+    /* Image selector container */
+    #image-selector {
+      position: fixed;
+      bottom: 90px; /* above bottom link & above image */
+      right: 20px;
+      display: flex;
+      gap: 8px;
+      z-index: 1100;
+      background: rgba(30,30,30,0.8);
+      padding: 6px 10px;
+      border-radius: 10px;
+      border: 2px solid rgb(255,81,0);
+    }
+    #image-selector button {
+      width: 40px;
+      height: 40px;
+      background: transparent;
+      border: 2px solid rgb(255,81,0);
+      color: rgb(255,81,0);
+      font-weight: bold;
+      font-family: monospace;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: background 0.3s;
+    }
+    #image-selector button:hover,
+    #image-selector button.active {
+      background: rgb(255,81,0);
+      color: black;
+    }
+    
+    /* Background Selector */
+    #background-selector {
+      position: fixed;
+      bottom: 40px; /* below image selector */
+      right: 20px;
+      display: flex;
+      gap: 8px;
+      z-index: 1100;
+      background: rgba(30,30,30,0.8);
+      padding: 6px 10px;
+      border-radius: 10px;
+      border: 2px solid rgb(255,81,0);
+    }
+    #background-selector button {
+      width: 50px;
+      height: 40px;
+      background: transparent;
+      border: 2px solid rgb(255,81,0);
+      color: rgb(255,81,0);
+      font-weight: bold;
+      font-family: monospace;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: background 0.3s;
+      font-size: 12px;
+    }
+    #background-selector button:hover,
+    #background-selector button.active {
+      background: rgb(255,81,0);
+      color: black;
     }
   </style>
 </head>
 <body>
-
-  <!-- Audio element without autoplay -->
   <audio id="bg-music" loop>
     <source src="audio/background.mp3" type="audio/mpeg" />
-    Your browser does not support the audio element.
   </audio>
 
   <h1 class="site-title">Nezha Anticheat</h1>
 
-  <div class="container">
-
-    <div class="column">
-      <h1>Active Clients</h1>
-      <p>Liquidbounce - <a href="https://liquidbounce.net/" target="_blank">Download</a></p>
-      <p>Myau - <a href="https://myau.sell.app/" target="_blank">Download</a></p>
-      <p>Platinum - <a href="https://discord.gg/YHH85FpeYj" target="_blank">Download</a></p>
-      <p>Terminus - <a href="https://terminusclient.com/" target="_blank">Download</a></p>
-      <p>Horion - <a href="https://horion.download/" target="_blank">Download</a></p>
-      <p>Ambient - <a href="https://legitclient.com/" target="_blank">Download</a></p>
+  <div class="column" style="top:100px; left:50px;">
+    <h1>Active Clients</h1>
+    <div class="content">
+      <div class="client-box"><span>Liquidbounce</span><a class="download-link" href="https://liquidbounce.net/" target="_blank">Download</a></div>
+      <div class="client-box"><span>Myau</span><a class="download-link" href="https://myau.sell.app/" target="_blank">Download</a></div>
+      <div class="client-box"><span>Platinum</span><a class="download-link" href="https://discord.gg/YHH85FpeYj" target="_blank">Download</a></div>
+      <div class="client-box"><span>Terminus</span><a class="download-link" href="https://terminusclient.com/" target="_blank">Download</a></div>
+      <div class="client-box"><span>Horion</span><a class="download-link" href="https://horion.download/" target="_blank">Download</a></div>
+      <div class="client-box"><span>Ambient</span><a class="download-link" href="https://legitclient.com/" target="_blank">Download</a></div>
     </div>
-
-    <div class="column">
-      <h1>Client Archive</h1>
-      <p>Hovac - <a href="https://hovac.top/" target="_blank">Download</a></p>
-      <p>Luvsy's Blatant Archive - <a href="https://www.mediafire.com/folder/tcojjzivye5ua/Luvsy+Blatant" target="_blank">Download</a></p>
-      <p>ForkBounce - <a href="https://www.mediafire.com/folder/tcojjzivye5ua/Luvsy+Blatant" target="_blank">Download</a></p>
-      <p>Nezha Archive - <a href="https://www.mediafire.com/folder/yhyoicwk93s2t/Nezha+Internal+Archive" target="_blank">Download</a></p>
-      <p>WonderLand Archive - <a href="https://wonderland.codeberg.page/" target="_blank">Download</a></p>
-      <p>Smite Client - <a href="https://www.mediafire.com/file/cgkpm5ltuk4qy4v/smite-patched.jar/file" target="_blank">Download</a></p>
-      <p>TwoNick Cracks - <a href="https://github.com/TwoNick?tab=repositories" target="_blank">Download</a></p>
-      <p>Violet Client - <a href="https://github.com/FatMolePanda/VioletClient" target="_blank">Download</a></p>
-      <p>Diablo Client SRC - <a href="https://github.com/Reowya/diablo-x-src/releases/tag/src" target="_blank">Download</a></p>
-      <p>Ripple Client - <a href="http://getripple.today/" target="_blank">Download</a></p>
-      <p>Ripple Client Backup - <a href="https://www.mediafire.com/file/t7y9d1efv9c9hs5/hglpxa.7z/file" target="_blank">Download</a></p>
-      <p>MCHCC - <a href="https://discord.gg/jvCZdaHr5B" target="_blank">Discord</a></p>
-      <p>Tomato - <a href="https://github.com/SlickJava/tomato" target="_blank">Download</a></p>
-      <p>MCC - <a href="https://discord.gg/X6RqPCzf5g" target="_blank">Discord</a></p>
-      <p>MCC - <a href="https://www.kuyo.lol/mcc/" target="_blank">Website</a></p>
-    </div>
-
-    <div class="column">
-      <h1>Sigma Archive</h1>
-      <p>Sigma 1.45 - <a href="https://www.mediafire.com/file/sxsbnhgg01hqsrs/Sigma_1.45.zip/file" target="_blank">Download</a></p>
-      <p>Sigma 1.5 - <a href="https://www.mediafire.com/file/6pg8w0fowy32hln/Sigma_1.5.zip/file" target="_blank">Download</a></p>
-      <p>Sigma 2.0 - <a href="https://www.mediafire.com/file/60phk04i3pm3nr2/Sigma_2.0.zip/file" target="_blank">Download</a></p>
-      <p>Sigma 2.07 - <a href="https://www.mediafire.com/file/7y3wbtnod6odf3n/Sigma_2.07.zip/file" target="_blank">Download</a></p>
-      <p>Sigma Dev - <a href="https://www.mediafire.com/file/ioggam19ajbhqr1/Sigma_dev.zip/file" target="_blank">Download</a></p>
-      <p>Sigma 2.2 - <a href="https://www.mediafire.com/file/dvnakdz16hmo0ag/Sigma_2.2.zip/file" target="_blank">Download</a></p>
-      <p>Sigma 3.9 - <a href="https://www.mediafire.com/file/d7wtr7b6l0hk6ts/Sigma_3.9.zip/file" target="_blank">Download</a></p>
-      <p>Sigma 3.9.1 - <a href="https://www.mediafire.com/file/2u9lyhyrqzpfbxb/Sigma_3.9.1.zip/file" target="_blank">Download</a></p>
-      <p>Sigma 3.9.2 - <a href="https://www.mediafire.com/file/8yd74xfigfth7oz/Sigma_3.9.2.zip/file" target="_blank">Download</a></p>
-      <p>Sigma 3.99 - <a href="https://www.mediafire.com/file/orv33jcbii6ous8/Sigma_3.99.zip/file" target="_blank">Download</a></p>
-      <p>Sigma Xmas - <a href="https://www.mediafire.com/file/ft8xkmnr48veixt/Sigma_Chrismas_edition.zip/file" target="_blank">Download</a></p>
-      <p>Sigma 4.0 - <a href="https://www.mediafire.com/file/v1qsbs58sfgc77t/Sigma_4.0.zip/file" target="_blank">Download</a></p>
-      <p>Sigma 4.1 - <a href="https://www.mediafire.com/file/ewe34n8auly10pi/Sigma_4.1.zip/file" target="_blank">Download</a></p>
-      <p>Sigma 4.11 - <a href="https://www.mediafire.com/file/676kqf8buo1jz04/Sigma_4.11.zip/file" target="_blank">Download</a></p>
-      <p>Sigma 4.12 - <a href="https://www.mediafire.com/file/hk7ajrdu894fzw8/Sigma_4.12.zip/file" target="_blank">Download</a></p>
-      <p>Sigma 4.13 - <a href="https://www.mediafire.com/file/u12q3g3d4kide4l/Sigma_4.13.zip/file" target="_blank">Download</a></p>
-      <p>Sigma 4.14 - <a href="https://www.mediafire.com/file/xz9b6emuhd6r4ut/Sigma_4.14.zip/file" target="_blank">Download</a></p>
-      <p>Sigma Rebase (GitHub) - <a href="https://github.com/Sigma-Skidder-Team/SigmaRebase" target="_blank">View</a></p>
-      <p>Sigma Remap (GitHub) - <a href="https://github.com/Sigma-Skidder-Team/SigmaRemap" target="_blank">View</a></p>
-      <p>Jello Folder - <a href="https://www.mediafire.com/folder/p5lj5p3vzuc4a/Jello" target="_blank">View</a></p>
-      <p>Sigma 4.12 Premium - <a href="https://www.mediafire.com/file/xcuxlmbex1dpysi/Sigma_4.12_Premium.tar.xz/file" target="_blank">Download</a></p>
-      <p>Sigma 4.11 Cracked Folder - <a href="https://www.mediafire.com/folder/fkzud95u4ajjc/Sigma+4.11+cracked" target="_blank">View</a></p>
-      <p>JelloReborn Folder - <a href="https://www.mediafire.com/folder/ep2jumz0a0j3l/JelloReborn" target="_blank">View</a></p>
-    </div>
-
   </div>
 
-  <div class="bottom-link">
-    <a href="cool_people.html">Cool People</a>
+  <div class="column" style="top:100px; left:470px;">
+    <h1>Client Archive</h1>
+    <div class="content">
+      <div class="client-box"><span>Hovac</span><a class="download-link" href="https://hovac.top/" target="_blank">Download</a></div>
+      <div class="client-box"><span>Luvsy's Blatant Archive</span><a class="download-link" href="https://www.mediafire.com/folder/tcojjzivye5ua/Luvsy+Blatant" target="_blank">Download</a></div>
+      <div class="client-box"><span>ForkBounce</span><a class="download-link" href="https://www.mediafire.com/folder/tcojjzivye5ua/Luvsy+Blatant" target="_blank">Download</a></div>
+      <div class="client-box"><span>Nezha Archive</span><a class="download-link" href="https://www.mediafire.com/folder/yhyoicwk93s2t/Nezha+Internal+Archive" target="_blank">Download</a></div>
+      <div class="client-box"><span>WonderLand Archive</span><a class="download-link" href="https://wonderland.codeberg.page/" target="_blank">Download</a></div>
+      <div class="client-box"><span>Smite Client</span><a class="download-link" href="https://www.mediafire.com/file/cgkpm5ltuk4qy4v/smite-patched.jar/file" target="_blank">Download</a></div>
+      <div class="client-box"><span>TwoNick Cracks</span><a class="download-link" href="https://github.com/TwoNick?tab=repositories" target="_blank">Download</a></div>
+      <div class="client-box"><span>Violet Client</span><a class="download-link" href="https://github.com/FatMolePanda/VioletClient" target="_blank">Download</a></div>
+      <div class="client-box"><span>Diablo Client SRC</span><a class="download-link" href="https://github.com/Reowya/diablo-x-src/releases/tag/src" target="_blank">Download</a></div>
+      <div class="client-box"><span>Ripple Client</span><a class="download-link" href="http://getripple.today/" target="_blank">Download</a></div>
+      <div class="client-box"><span>Ripple Client Backup</span><a class="download-link" href="https://www.mediafire.com/file/t7y9d1efv9c9hs5/hglpxa.7z/file" target="_blank">Download</a></div>
+      <div class="client-box"><span>MCHCC</span><a class="download-link" href="https://discord.gg/jvCZdaHr5B" target="_blank">Discord</a></div>
+      <div class="client-box"><span>Tomato</span><a class="download-link" href="https://github.com/SlickJava/tomato" target="_blank">Download</a></div>
+      <div class="client-box"><span>MCC Discord</span><a class="download-link" href="https://discord.gg/X6RqPCzf5g" target="_blank">Discord</a></div>
+      <div class="client-box"><span>MCC Website</span><a class="download-link" href="https://www.kuyo.lol/mcc/" target="_blank">Website</a></div>
+    </div>
   </div>
+
+  <div class="column" style="top:100px; left:890px;">
+    <h1>Sigma Archive</h1>
+    <div class="content">
+      <div class="client-box"><span>Sigma 1.45</span><a class="download-link" href="https://www.mediafire.com/file/sxsbnhgg01hqsrs/Sigma_1.45.zip/file" target="_blank">Download</a></div>
+      <div class="client-box"><span>Sigma 1.5</span><a class="download-link" href="https://www.mediafire.com/file/6pg8w0fowy32hln/Sigma_1.5.zip/file" target="_blank">Download</a></div>
+      <div class="client-box"><span>Sigma 2.0</span><a class="download-link" href="https://www.mediafire.com/file/60phk04i3pm3nr2/Sigma_2.0.zip/file" target="_blank">Download</a></div>
+      <div class="client-box"><span>Sigma 2.07</span><a class="download-link" href="https://www.mediafire.com/file/7y3wbtnod6odf3n/Sigma_2.07.zip/file" target="_blank">Download</a></div>
+      <div class="client-box"><span>Sigma Dev</span><a class="download-link" href="https://www.mediafire.com/file/ioggam19ajbhqr1/Sigma_dev.zip/file" target="_blank">Download</a></div>
+      <div class="client-box"><span>Sigma 2.2</span><a class="download-link" href="https://www.mediafire.com/file/dvnakdz16hmo0ag/Sigma_2.2.zip/file" target="_blank">Download</a></div>
+      <div class="client-box"><span>Sigma 3.9</span><a class="download-link" href="https://www.mediafire.com/file/d7wtr7b6l0hk6ts/Sigma_3.9.zip/file" target="_blank">Download</a></div>
+      <div class="client-box"><span>Sigma 3.9.1</span><a class="download-link" href="https://www.mediafire.com/file/2u9lyhyrqzpfbxb/Sigma_3.9.1.zip/file" target="_blank">Download</a></div>
+      <div class="client-box"><span>Sigma 3.9.2</span><a class="download-link" href="https://www.mediafire.com/file/8yd74xfigfth7oz/Sigma_3.9.2.zip/file" target="_blank">Download</a></div>
+      <div class="client-box"><span>Sigma 3.99</span><a class="download-link" href="https://www.mediafire.com/file/orv33jcbii6ous8/Sigma_3.99.zip/file" target="_blank">Download</a></div>
+      <div class="client-box"><span>Sigma Xmas</span><a class="download-link" href="https://www.mediafire.com/file/ft8xkmnr48veixt/Sigma_Chrismas_edition.zip/file" target="_blank">Download</a></div>
+      <div class="client-box"><span>Sigma 4.0</span><a class="download-link" href="https://www.mediafire.com/file/v1qsbs58sfgc77t/Sigma_4.0.zip/file" target="_blank">Download</a></div>
+      <div class="client-box"><span>Sigma 4.1</span><a class="download-link" href="https://www.mediafire.com/file/ewe34n8auly10pi/Sigma_4.1.zip/file" target="_blank">Download</a></div>
+      <div class="client-box"><span>Sigma 4.11</span><a class="download-link" href="https://www.mediafire.com/file/676kqf8buo1jz04/Sigma_4.11.zip/file" target="_blank">Download</a></div>
+      <div class="client-box"><span>Sigma 4.12</span><a class="download-link" href="https://www.mediafire.com/file/hk7ajrdu894fzw8/Sigma_4.12.zip/file" target="_blank">Download</a></div>
+      <div class="client-box"><span>Sigma 4.13</span><a class="download-link" href="https://www.mediafire.com/file/u12q3g3d4kide4l/Sigma_4.13.zip/file" target="_blank">Download</a></div>
+      <div class="client-box"><span>Sigma 4.14</span><a class="download-link" href="https://www.mediafire.com/file/xz9b6emuhd6r4ut/Sigma_4.14.zip/file" target="_blank">Download</a></div>
+      <div class="client-box"><span>Sigma Rebase (GitHub)</span><a class="download-link" href="https://github.com/Sigma-Skidder-Team/SigmaRebase" target="_blank">View</a></div>
+      <div class="client-box"><span>Sigma Remap (GitHub)</span><a class="download-link" href="https://github.com/Sigma-Skidder-Team/SigmaRemap" target="_blank">View</a></div>
+      <div class="client-box"><span>Jello Folder</span><a class="download-link" href="https://www.mediafire.com/folder/p5lj5p3vzuc4a/Jello" target="_blank">View</a></div>
+      <div class="client-box"><span>Sigma 4.12 Premium</span><a class="download-link" href="https://www.mediafire.com/file/xcuxlmbex1dpysi/Sigma_4.12_Premium.tar.xz/file" target="_blank">Download</a></div>
+      <div class="client-box"><span>Sigma 4.11 Cracked Folder</span><a class="download-link" href="https://www.mediafire.com/folder/fkzud95u4ajjc/Sigma+4.11+cracked" target="_blank">View</a></div>
+      <div class="client-box"><span>JelloReborn Folder</span><a class="download-link" href="https://www.mediafire.com/folder/ep2jumz0a0j3l/JelloReborn" target="_blank">View</a></div>
+    </div>
+  </div>
+
+  <!-- Image selector -->
+  <div id="image-selector">
+    <button data-img="movablefmby1.png" class="active">1</button>
+    <button data-img="movablefmby2.png">2</button>
+    <button data-img="movablefmby3.png">3</button>
+    <button data-img="movablefmby4.png">4</button>
+    <button data-img="movablefmby5.png">5</button>
+  </div>
+
+  <!-- Background Selector -->
+  <div id="background-selector">
+    <button data-bg="bg1.png" class="active">BG 1</button>
+    <button data-bg="bg2.png">BG 2</button>
+    <button data-bg="bg3.png">BG 3</button>
+    <button data-bg="bg4.png">BG 4</button>
+    <button data-bg="bg5.png">BG 5</button>
+  </div>
+
+  <!-- Draggable image -->
+  <img id="movable-image" src="images/movablefmby1.png" alt="Movable Image" />
+
+  <div class="bottom-link"><a href="cool_people.html">Cool People</a></div>
 
   <script>
+    // Background music play on first click
     document.addEventListener('click', function playMusic() {
-      const audio = document.getElementById('bg-music');
-      if (audio.paused) {
-        audio.play().catch(() => {});
-      }
+      document.getElementById('bg-music').play().catch(() => {});
       document.removeEventListener('click', playMusic);
     });
-  </script>
 
+    // Draggable columns
+    document.querySelectorAll('.column').forEach(column => {
+      let isDragging = false, offsetX, offsetY;
+      const header = column.querySelector('h1');
+      const content = column.querySelector('.content');
+
+      // Left click for dragging
+      header.addEventListener('mousedown', e => {
+        if (e.button !== 0) return; // Only left click
+        isDragging = true;
+        offsetX = e.clientX - column.offsetLeft;
+        offsetY = e.clientY - column.offsetTop;
+        column.style.cursor = 'grabbing';
+      });
+
+      // Right click to toggle content
+      header.addEventListener('contextmenu', e => {
+        e.preventDefault(); // Prevent context menu from appearing
+        content.classList.toggle('collapsed');
+      });
+
+      document.addEventListener('mousemove', e => {
+        if (isDragging) {
+          column.style.left = (e.clientX - offsetX) + 'px';
+          column.style.top = (e.clientY - offsetY) + 'px';
+        }
+      });
+
+      document.addEventListener('mouseup', () => {
+        isDragging = false;
+        column.style.cursor = 'grab';
+      });
+    });
+
+    // Draggable image logic
+    (function(){
+      const img = document.getElementById('movable-image');
+      const selector = document.getElementById('image-selector');
+      let isDragging = false;
+      let startX, startY;
+
+      // Starting position - bottom right with margin
+      const marginRight = 20;
+      const marginBottom = 20;
+      let origX, origY;
+
+      function setInitialPosition() {
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+        const width = 450;
+        const height = img.naturalHeight * (width / img.naturalWidth);
+        origX = vw - marginRight - width;
+        origY = vh - marginBottom - height;
+        img.style.transform = `translate(${origX}px, ${origY}px)`;
+      }
+
+      img.onload = () => {
+        setInitialPosition();
+      };
+
+      if (img.complete) {
+        setInitialPosition();
+      }
+
+      img.style.cursor = 'grab';
+
+      img.addEventListener('mousedown', e => {
+        if (e.button !== 0) return;
+        isDragging = true;
+        startX = e.clientX;
+        startY = e.clientY;
+        img.style.cursor = 'grabbing';
+        e.preventDefault();
+      });
+
+      document.addEventListener('mousemove', e => {
+        if (!isDragging) return;
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+        img.style.transform = `translate(${origX + dx}px, ${origY + dy}px)`;
+      });
+
+      document.addEventListener('mouseup', e => {
+        if (isDragging) {
+          const dx = e.clientX - startX;
+          const dy = e.clientY - startY;
+          origX += dx;
+          origY += dy;
+          isDragging = false;
+          img.style.cursor = 'grab';
+        }
+      });
+
+      window.addEventListener('resize', () => {
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+        if (origX + 450 > vw) origX = vw - 450 - marginRight;
+        if (origY + img.naturalHeight > vh) origY = vh - img.naturalHeight - marginBottom;
+        img.style.transform = `translate(${origX}px, ${origY}px)`;
+      });
+
+      // Image selector buttons logic
+      selector.querySelectorAll('button').forEach(button => {
+        button.addEventListener('click', () => {
+          // Update image src
+          const newImg = button.getAttribute('data-img');
+          img.src = `images/${newImg}`;
+
+          // Reset position after image loads
+          img.onload = () => {
+            setInitialPosition();
+          };
+
+          // Highlight active button
+          selector.querySelectorAll('button').forEach(btn => btn.classList.remove('active'));
+          button.classList.add('active');
+        });
+      });
+    })();
+
+    // Background selector buttons logic
+    (function(){
+      const selector = document.getElementById('background-selector');
+      const buttons = selector.querySelectorAll('button');
+
+      // Automatically set bg1.png on page load
+      document.body.style.background = "url('images/bg1.png') no-repeat center center fixed";
+      document.body.style.backgroundSize = 'cover';
+
+      buttons.forEach(button => {
+        button.addEventListener('click', () => {
+          const newBg = button.getAttribute('data-bg');
+          document.body.style.background = `url('images/${newBg}') no-repeat center center fixed`;
+          document.body.style.backgroundSize = 'cover';
+          buttons.forEach(btn => btn.classList.remove('active'));
+          button.classList.add('active');
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
